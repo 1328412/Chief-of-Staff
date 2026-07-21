@@ -7,6 +7,7 @@ import { briefingManager } from './briefing.js';
 import { scheduleManager } from './schedule.js';
 import { triageManager } from './triage.js';
 import { orchestrator } from './orchestrator.js';
+import { m365Service } from './m365.js';
 
 class CoSApplication {
   init() {
@@ -15,6 +16,7 @@ class CoSApplication {
     // Setup global window reference for inline handlers
     window.CoSApp = this;
 
+    m365Service.init();
     this.bindNavigation();
     this.bindMasterDirectiveInput();
     this.renderAdminTasks();
@@ -134,6 +136,24 @@ class CoSApplication {
     if (elCritical) elCritical.textContent = criticalCount;
     if (elTasks) elTasks.textContent = taskCount;
     if (elMeetings) elMeetings.textContent = meetingCount;
+  }
+
+  async connectM365() {
+    const account = await m365Service.login();
+    if (account) {
+      const statusText = document.getElementById('cos-status-text');
+      const connectBtn = document.getElementById('btn-m365-connect');
+      if (statusText) statusText.textContent = `Connected: ${account.name || account.username}`;
+      if (connectBtn) {
+        connectBtn.innerHTML = `<i class="fa-solid fa-circle-check"></i> Connected (${account.username})`;
+        connectBtn.classList.remove('btn-cyan');
+        connectBtn.classList.add('btn-secondary');
+      }
+
+      state.executive.name = account.name || state.executive.name;
+      briefingManager.renderBriefingView();
+      alert(`Successfully connected to Microsoft 365 as ${account.username}!\n\nLive Graph API sync is now active for your Outlook Calendar, Inbox, SharePoint sites, and OneDrive.`);
+    }
   }
 
   // Quick Action Helpers
