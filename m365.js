@@ -16,13 +16,14 @@ export class M365Service {
       }
     };
 
-    // Approved Standard Read Connectors (Outlook Mail, OneDrive, SharePoint)
+    // Least-privilege delegated scopes for personal mailbox and personal OneDrive access.
+    // NOTE: Organization-wide SharePoint scopes (e.g. Sites.Read.All) typically require admin consent.
     this.scopes = [
+      "openid",
+      "profile",
       "User.Read",
       "Mail.Read",
-      "Files.Read",
-      "Files.Read.All",
-      "Sites.Read.All"
+      "Files.Read"
     ];
 
     this.msalInstance = null;
@@ -82,6 +83,8 @@ export class M365Service {
     } catch (error) {
       console.error("Microsoft 365 Login Error:", error);
 
+      const errorText = `${error?.errorCode || ""} ${error?.message || ""}`.toLowerCase();
+
       if (error.errorCode === "block_nested_popups") {
         // Some hosts run this app in a popup/webview. Redirect-based auth avoids nested popup restrictions.
         await this.msalInstance.loginRedirect({
@@ -95,6 +98,18 @@ export class M365Service {
       if (error.errorCode === "interaction_in_progress" || error.errorCode === "popup_window_error") {
         alert("Login popup was blocked or interrupted. Clearing browser cache and resetting authentication state. Please click 'Connect Microsoft 365' again.");
         sessionStorage.clear();
+        return null;
+      }
+
+      if (errorText.includes("admin") || errorText.includes("consent")) {
+        const consentUrl = `https://login.microsoftonline.com/organizations/adminconsent?client_id=${encodeURIComponent(this.msalConfig.auth.clientId)}&redirect_uri=${encodeURIComponent(this.msalConfig.auth.redirectUri)}`;
+        alert(
+          `Admin consent is required by your organization policy.\n\n` +
+          `App: Chief of Staff AI Agent\n` +
+          `Client ID: ${this.msalConfig.auth.clientId}\n` +
+          `Requested delegated scopes: ${this.scopes.join(", ")}\n\n` +
+          `Ask your Microsoft 365 admin to grant consent using:\n${consentUrl}`
+        );
         return null;
       }
 
