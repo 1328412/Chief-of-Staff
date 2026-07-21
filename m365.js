@@ -6,7 +6,7 @@ export class M365Service {
   constructor() {
     this.msalConfig = {
       auth: {
-        clientId: "fafd3149-1381-4d6a-a8b7-6f864f719de4", // Replace with your Azure Application (Client) ID
+        clientId: "fafd3149-1381-4d6a-a8b7-6f864f719de4",
 authority: "https://login.microsoftonline.com/common",
     redirectUri: "https://1328412.github.io/Chief-of-Staff/"      },
       cache: {
