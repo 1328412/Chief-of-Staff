@@ -1,14 +1,14 @@
 /**
- * Executive Chief of Staff - Microsoft 365 & Graph API Live Integration Module
+ * Executive Chief of Staff - Microsoft 365 & Graph API Approved Integration Module
  */
 
 export class M365Service {
   constructor() {
     this.msalConfig = {
-auth: {
-  clientId: "fafd3149-1381-4d6a-a8b7-6f864f719de4", // e.g. "a1b2c3d4-e5f6-7890-abcd-1234567890ab"
-  authority: "https://login.microsoftonline.com/b945c813-dce6-41f8-8457-5a12c2fe15bf",
-  redirectUri: window.location.href.split('#')[0]
+      auth: {
+        clientId: "YOUR_AZURE_CLIENT_ID", // Replace with your Azure Application (Client) ID
+        authority: "https://login.microsoftonline.com/b945c813-dce6-41f8-8457-5a12c2fe15bf",
+        redirectUri: window.location.href.split('#')[0]
       },
       cache: {
         cacheLocation: "sessionStorage",
@@ -16,11 +16,11 @@ auth: {
       }
     };
 
+    // Approved Standard Read Connectors (Outlook Mail, OneDrive, SharePoint)
     this.scopes = [
       "User.Read",
-      "Calendars.ReadWrite",
-      "Mail.ReadWrite",
-      "Mail.Send",
+      "Mail.Read",
+      "Files.Read",
       "Files.Read.All",
       "Sites.Read.All"
     ];
@@ -43,6 +43,14 @@ auth: {
     }
 
     try {
+      // Clear stale interaction keys if present to prevent interaction_in_progress block
+      for (let i = 0; i < sessionStorage.length; i++) {
+        const key = sessionStorage.key(i);
+        if (key && key.includes("msal.interaction.status")) {
+          sessionStorage.removeItem(key);
+        }
+      }
+
       const loginResponse = await this.msalInstance.loginPopup({
         scopes: this.scopes,
         prompt: "select_account"
@@ -55,7 +63,15 @@ auth: {
       return this.account;
     } catch (error) {
       console.error("Microsoft 365 Login Error:", error);
-      alert(`Microsoft 365 Login failed: ${error.message}\n\nNote: To connect to live enterprise data, register an App in Azure Active Directory and set Client ID.`);
+      
+      // If popup was blocked or interaction in progress, attempt reset
+      if (error.errorCode === "interaction_in_progress" || error.errorCode === "popup_window_error") {
+        alert("Login popup was blocked or interrupted. Clearing browser cache and resetting authentication state. Please click 'Connect Microsoft 365' again.");
+        sessionStorage.clear();
+        return null;
+      }
+
+      alert(`Microsoft 365 Login Notice: ${error.message}\n\nNote: To connect to live enterprise data, register an App in Azure Active Directory and set Client ID.`);
       return null;
     }
   }
@@ -95,13 +111,7 @@ auth: {
     return await response.json();
   }
 
-  // Live M365 Data Fetchers
-  async getLiveCalendarEvents() {
-    if (!this.isLiveMode) return null;
-    const data = await this.fetchGraphApi('/me/calendar/events?$top=10&$orderby=start/dateTime');
-    return data ? data.value : [];
-  }
-
+  // Live M365 Approved Data Fetchers
   async getLiveInboxMessages() {
     if (!this.isLiveMode) return null;
     const data = await this.fetchGraphApi('/me/messages?$top=15&$orderby=receivedDateTime desc');
