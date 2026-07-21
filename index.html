@@ -13,6 +13,9 @@
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
+  <!-- Microsoft Authentication Library (MSAL.js) for M365 Integration -->
+  <script src="https://alcdn.msauth.net/browser/2.35.0/js/msal-browser.min.js"></script>
+
   <!-- Application Styles -->
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -86,9 +89,13 @@
         </div>
 
         <div class="header-actions">
+          <button class="btn btn-cyan" id="btn-m365-connect" onclick="window.CoSApp.connectM365()">
+            <i class="fa-brands fa-microsoft"></i> Connect Microsoft 365
+          </button>
+
           <div class="cos-status-pill">
             <span class="status-dot"></span>
-            <span>CoS Master Agent Online</span>
+            <span id="cos-status-text">CoS Agent (Demo Mode)</span>
           </div>
 
           <button class="btn btn-primary" onclick="document.getElementById('master-directive-input').focus()">
