@@ -81,6 +81,15 @@ export class M365Service {
       return this.account;
     } catch (error) {
       console.error("Microsoft 365 Login Error:", error);
+
+      if (error.errorCode === "block_nested_popups") {
+        // Some hosts run this app in a popup/webview. Redirect-based auth avoids nested popup restrictions.
+        await this.msalInstance.loginRedirect({
+          scopes: this.scopes,
+          prompt: "select_account"
+        });
+        return null;
+      }
       
       // If popup was blocked or interaction in progress, attempt reset
       if (error.errorCode === "interaction_in_progress" || error.errorCode === "popup_window_error") {
@@ -89,7 +98,7 @@ export class M365Service {
         return null;
       }
 
-      alert(`Microsoft 365 Login Notice: ${error.message}\n\nNote: To connect to live enterprise data, register an App in Azure Active Directory and set Client ID.`);
+      alert(`Microsoft 365 Login Notice: ${error.message}\n\nIf this app is running in a popup/embedded window, open it in a normal browser tab and sign in again.`);
       return null;
     }
   }
@@ -104,10 +113,22 @@ export class M365Service {
       });
       return tokenResponse.accessToken;
     } catch (e) {
-      const tokenResponse = await this.msalInstance.acquireTokenPopup({
-        scopes: this.scopes
-      });
-      return tokenResponse.accessToken;
+      try {
+        const tokenResponse = await this.msalInstance.acquireTokenPopup({
+          scopes: this.scopes
+        });
+        return tokenResponse.accessToken;
+      } catch (popupError) {
+        if (popupError.errorCode === "block_nested_popups") {
+          await this.msalInstance.acquireTokenRedirect({
+            scopes: this.scopes,
+            account: this.account
+          });
+          return null;
+        }
+
+        throw popupError;
+      }
     }
   }
 
