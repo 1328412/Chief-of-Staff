@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Executive Chief of Staff Agent — AI Triage & Sub-Agent Orchestrator</title>
+  
+  <!-- Modern Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Application Styles -->
+  <link rel="stylesheet" href="src/css/styles.css">
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">
+          <i class="fa-solid fa-user-gear"></i>
+        </div>
+        <div>
+          <div class="brand-title">Chief of Staff</div>
+          <div class="brand-subtitle">Executive AI Suite</div>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <div class="nav-section-label">Core Executive Tools</div>
+        
+        <a class="nav-item active" data-tab="briefing">
+          <i class="fa-solid fa-list-check"></i>
+          <span>Daily Briefing</span>
+        </a>
+
+        <a class="nav-item" data-tab="schedule">
+          <i class="fa-regular fa-calendar-days"></i>
+          <span>Daily Schedule</span>
+          <span class="nav-badge blue">4 Events</span>
+        </a>
+
+        <a class="nav-item" data-tab="triage">
+          <i class="fa-solid fa-inbox"></i>
+          <span>Inbox Triage</span>
+          <span class="nav-badge">1 Urgent</span>
+        </a>
+
+        <a class="nav-item" data-tab="subagents">
+          <i class="fa-solid fa-diagram-project"></i>
+          <span>Sub-Agent Router</span>
+          <span class="nav-badge blue">3 Active</span>
+        </a>
+
+        <div class="nav-section-label" style="margin-top: 1rem;">Administrative</div>
+
+        <a class="nav-item" data-tab="tasks">
+          <i class="fa-solid fa-tasks"></i>
+          <span>Task Delegation</span>
+        </a>
+      </nav>
+
+      <div class="user-profile-widget">
+        <div class="avatar">AM</div>
+        <div class="user-info">
+          <span class="user-name">Alex Mercer</span>
+          <span class="user-role">Chief Executive Officer</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-wrapper">
+      
+      <!-- Top Header Bar -->
+      <header class="top-header">
+        <div class="header-title-group">
+          <h1>Executive Command Center</h1>
+          <p>Autonomous Schedule Manager, Inbox Triager & Sub-Agent Coordinator</p>
+        </div>
+
+        <div class="header-actions">
+          <div class="cos-status-pill">
+            <span class="status-dot"></span>
+            <span>CoS Master Agent Online</span>
+          </div>
+
+          <button class="btn btn-primary" onclick="document.getElementById('master-directive-input').focus()">
+            <i class="fa-solid fa-terminal"></i> Direct Agent
+          </button>
+        </div>
+      </header>
+
+      <!-- Master Directive Bar -->
+      <section class="master-directive-section">
+        <div class="directive-input-wrapper">
+          <i class="fa-solid fa-wand-magic-sparkles directive-icon"></i>
+          <input type="text" id="master-directive-input" class="directive-input" placeholder="Command Chief of Staff agent (e.g. 'Retrieve Q3 M&A term sheet escrow details from OneDrive and SharePoint')...">
+          <button class="btn btn-primary" id="btn-send-directive" style="padding: 0.45rem 1rem;">
+            <i class="fa-solid fa-paper-plane"></i> Execute
+          </button>
+        </div>
+
+        <div class="directive-presets">
+          <span class="preset-chip" data-prompt="Find escrow guarantee Clause 4.2 in Project Apex term sheet from OneDrive & SharePoint and draft response to Chair Victoria Vance">
+            <i class="fa-solid fa-magnifying-glass"></i> Search SharePoint/OneDrive Escrow Clause
+          </span>
+          <span class="preset-chip" data-prompt="Resolve 10:00 AM calendar conflict and insert executive focus block">
+            <i class="fa-regular fa-clock"></i> Optimize Daily Schedule
+          </span>
+          <span class="preset-chip" data-prompt="Triage high priority emails and draft executive responses for CEO sign-off">
+            <i class="fa-solid fa-envelope-open-text"></i> Triage Urgent Inbox
+          </span>
+        </div>
+      </section>
+
+      <!-- Scrollable Tab Content Body -->
+      <div class="content-body">
+        
+        <!-- Metrics Row -->
+        <div class="metrics-row">
+          <div class="metric-card">
+            <div class="metric-info">
+              <h4>Critical Alerts</h4>
+              <div class="metric-value" id="metric-critical-count">1</div>
+              <div class="metric-trend warn"><i class="fa-solid fa-triangle-exclamation"></i> Action Required</div>
+            </div>
+            <div class="metric-icon-box rose"><i class="fa-solid fa-fire"></i></div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-info">
+              <h4>Today's Meetings</h4>
+              <div class="metric-value" id="metric-meetings-count">4</div>
+              <div class="metric-trend up"><i class="fa-solid fa-calendar-check"></i> 1 Conflict Resolved</div>
+            </div>
+            <div class="metric-icon-box indigo"><i class="fa-solid fa-calendar-day"></i></div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-info">
+              <h4>Pending Delegation</h4>
+              <div class="metric-value" id="metric-tasks-count">3</div>
+              <div class="metric-trend up"><i class="fa-solid fa-check"></i> 2 In Progress</div>
+            </div>
+            <div class="metric-icon-box emerald"><i class="fa-solid fa-list-check"></i></div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-info">
+              <h4>Active Sub-Agents</h4>
+              <div class="metric-value">3</div>
+              <div class="metric-trend up"><i class="fa-solid fa-circle-check"></i> SharePoint & OneDrive</div>
+            </div>
+            <div class="metric-icon-box cyan"><i class="fa-solid fa-cubes-stacked"></i></div>
+          </div>
+        </div>
+
+        <!-- TAB 1: BRIEFING -->
+        <div class="tab-pane active" id="tab-briefing">
+          <div id="briefing-container">
+            <!-- Dynamic Briefing Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- TAB 2: SCHEDULE -->
+        <div class="tab-pane" id="tab-schedule">
+          <div class="glass-card mb-4">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fa-regular fa-calendar-days"></i>
+                <span>Executive Schedule Timeline — Today</span>
+              </div>
+              <button class="btn btn-cyan" onclick="window.CoSApp.optimizeSchedule()">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> AI Auto-Optimize Schedule
+              </button>
+            </div>
+            <div id="schedule-list-area">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: INBOX TRIAGE -->
+        <div class="tab-pane" id="tab-triage">
+          <div class="glass-card mb-4">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fa-solid fa-filter"></i>
+                <span>Executive Inbox Triage Workspace</span>
+              </div>
+              <button class="btn btn-secondary" onclick="window.CoSApp.triageCriticalEmail()">
+                <i class="fa-solid fa-eye"></i> View Critical Only
+              </button>
+            </div>
+            <div id="inbox-list-area">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 4: SUB-AGENT ROUTER -->
+        <div class="tab-pane" id="tab-subagents">
+          <div class="orchestrator-container">
+            
+            <div class="glass-card">
+              <div class="card-header">
+                <div class="card-title">
+                  <i class="fa-solid fa-diagram-project"></i>
+                  <span>Specialized Document-Retrieval Sub-Agents Network</span>
+                </div>
+                <span class="cos-status-pill"><span class="status-dot"></span> 3 Sub-Agents Standby</span>
+              </div>
+
+              <div class="agent-nodes-grid">
+                
+                <!-- Master CoS -->
+                <div class="agent-node-card active" id="agent-cos">
+                  <div class="agent-node-header">
+                    <span class="agent-title"><i class="fa-solid fa-user-shield" style="color: var(--primary);"></i> CoS Master Agent</span>
+                    <span class="agent-pulse"></span>
+                  </div>
+                  <div class="agent-sources">Primary Coordinator: Parses executive directives, decomposes queries, dispatches file sub-agents.</div>
+                  <div class="agent-status-text">Standing by for executive instructions</div>
+                </div>
+
+                <!-- SharePoint Agent -->
+                <div class="agent-node-card" id="agent-sp">
+                  <div class="agent-node-header">
+                    <span class="agent-title"><i class="fa-solid fa-share-nodes" style="color: var(--accent-cyan);"></i> SharePoint Specialist</span>
+                    <span class="agent-pulse"></span>
+                  </div>
+                  <div class="agent-sources">Target Scope: Corporate Portals, Governance Repos, Financial Forecasts & Legal Audits.</div>
+                  <div class="agent-status-text">Idle — Listening for Graph API call</div>
+                </div>
+
+                <!-- OneDrive Agent -->
+                <div class="agent-node-card" id="agent-od">
+                  <div class="agent-node-header">
+                    <span class="agent-title"><i class="fa-solid fa-cloud" style="color: var(--accent-emerald);"></i> OneDrive Specialist</span>
+                    <span class="agent-pulse"></span>
+                  </div>
+                  <div class="agent-sources">Target Scope: CEO Personal Drive, Strategic M&A Folders, Term Sheets & Slide Decks.</div>
+                  <div class="agent-status-text">Idle — Listening for Graph API call</div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Terminal Execution Logs -->
+            <div class="terminal-window">
+              <div class="terminal-header">
+                <div class="terminal-controls">
+                  <span class="control-dot red"></span>
+                  <span class="control-dot yellow"></span>
+                  <span class="control-dot green"></span>
+                </div>
+                <span>Sub-Agent Execution Stream & Reasoning Logs</span>
+                <span style="color: var(--accent-cyan);">Real-time</span>
+              </div>
+              <div class="terminal-logs" id="terminal-logs">
+                <div class="log-entry">
+                  <span class="log-time">[08:00:00]</span>
+                  <span class="log-agent cos">CoS Master Agent:</span>
+                  <span class="log-msg">Executive Chief of Staff Agent framework loaded. Sub-agents ready for SharePoint and OneDrive document triage.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sub-agent result area -->
+            <div id="subagent-results-area"></div>
+
+          </div>
+        </div>
+
+        <!-- TAB 5: ADMIN TASKS -->
+        <div class="tab-pane" id="tab-tasks">
+          <div class="glass-card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fa-solid fa-list-check"></i>
+                <span>Administrative Task Delegation & Approval Matrix</span>
+              </div>
+            </div>
+
+            <table class="task-table">
+              <thead>
+                <tr>
+                  <th>Task Title</th>
+                  <th>Assigned To</th>
+                  <th>Due Date</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="admin-tasks-tbody">
+                <!-- Rendered by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Email Modal -->
+  <div class="modal-overlay" id="email-modal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <div class="modal-title"><i class="fa-solid fa-envelope-open-text" style="color: var(--primary); margin-right: 0.5rem;"></i> Executive Message Triage</div>
+        <button class="modal-close" onclick="window.CoSApp.closeModal()">&times;</button>
+      </div>
+      <div id="email-modal-body">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Script Module -->
+  <script type="module" src="src/js/app.js"></script>
+
+</body>
+</html>
