@@ -139,21 +139,86 @@ class CoSApplication {
   }
 
   async connectM365() {
-    const account = await m365Service.login();
-    if (account) {
-      const statusText = document.getElementById('cos-status-text');
-      const connectBtn = document.getElementById('btn-m365-connect');
-      if (statusText) statusText.textContent = `Connected: ${account.name || account.username}`;
-      if (connectBtn) {
-        connectBtn.innerHTML = `<i class="fa-solid fa-circle-check"></i> Connected (${account.username})`;
-        connectBtn.classList.remove('btn-cyan');
-        connectBtn.classList.add('btn-secondary');
-      }
+    try {
+      if (typeof m365Service !== 'undefined' && m365Service.msalInstance) {
+        const account = await m365Service.login();
+        if (account) {
+          const statusText = document.getElementById('cos-status-text');
+          const connectBtn = document.getElementById('btn-m365-connect');
+          if (statusText) statusText.textContent = `Connected: ${account.name || account.username}`;
+          if (connectBtn) {
+            connectBtn.innerHTML = `<i class="fa-solid fa-circle-check"></i> Connected (${account.username})`;
+            connectBtn.classList.remove('btn-cyan');
+            connectBtn.classList.add('btn-secondary');
+          }
 
-      state.executive.name = account.name || state.executive.name;
-      briefingManager.renderBriefingView();
-      alert(`Successfully connected to Microsoft 365 as ${account.username}!\n\nLive Graph API sync is now active for your Outlook Calendar, Inbox, SharePoint sites, and OneDrive.`);
+          state.executive.name = account.name || state.executive.name;
+          briefingManager.renderBriefingView();
+          alert(`Successfully connected to Microsoft 365 as ${account.username}!\n\nLive Graph API sync is now active for your Outlook Calendar, Inbox, SharePoint sites, OneDrive, Excel, and PowerPoint.`);
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn("M365 Login error/notice:", err);
     }
+
+    // Show interactive M365 Connection & Setup Modal
+    this.openM365SetupModal();
+  }
+
+  openM365SetupModal() {
+    const modal = document.getElementById('email-modal');
+    const modalContent = document.getElementById('email-modal-body');
+    if (!modal || !modalContent) return;
+
+    modalContent.innerHTML = `
+      <div style="margin-bottom: 1rem;">
+        <div style="font-size: 1.25rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
+          <i class="fa-brands fa-microsoft" style="color: var(--accent-cyan);"></i> Microsoft 365 Live Integration Hub
+        </div>
+        <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem;">
+          Connect your Chief of Staff AI directly to your Outlook, OneDrive, SharePoint, Excel, and PowerPoint.
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-bottom: 1.25rem;">
+        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); padding: 0.75rem; border-radius: var(--radius-sm);">
+          <div style="font-size: 0.85rem; font-weight: 600; color: var(--accent-cyan);"><i class="fa-solid fa-envelope" style="margin-right: 0.4rem;"></i> Outlook Inbox & Calendar</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem;">Live email urgency triage & automatic meeting conflict resolution.</div>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); padding: 0.75rem; border-radius: var(--radius-sm);">
+          <div style="font-size: 0.85rem; font-weight: 600; color: var(--accent-emerald);"><i class="fa-solid fa-cloud" style="margin-right: 0.4rem;"></i> OneDrive & SharePoint</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem;">Deep sub-agent search across personal drafts, policy repos & team sites.</div>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); padding: 0.75rem; border-radius: var(--radius-sm);">
+          <div style="font-size: 0.85rem; font-weight: 600; color: var(--accent-amber);"><i class="fa-solid fa-file-excel" style="margin-right: 0.4rem;"></i> Excel Spreadsheets</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem;">Extract financial models, budgets & supply chain metrics directly into briefs.</div>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); padding: 0.75rem; border-radius: var(--radius-sm);">
+          <div style="font-size: 0.85rem; font-weight: 600; color: var(--accent-rose);"><i class="fa-solid fa-file-powerpoint" style="margin-right: 0.4rem;"></i> PowerPoint Slides</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem;">Analyze board decks & executive presentation outlines automatically.</div>
+        </div>
+      </div>
+
+      <div style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: var(--radius-md); padding: 0.85rem; margin-bottom: 1.25rem;">
+        <div style="font-size: 0.825rem; font-weight: 700; color: var(--primary);"><i class="fa-solid fa-key" style="margin-right:0.4rem;"></i> Why is Login Required?</div>
+        <div style="font-size: 0.8rem; color: var(--text-main); margin-top: 0.3rem;">
+          Microsoft requires an official login grant (OAuth2) to ensure your company's private emails and files can never be accessed by unauthorized websites.
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+        <button class="btn btn-secondary" onclick="window.CoSApp.closeModal()">Close</button>
+        <button class="btn btn-cyan" onclick="alert('Make sure m365.js is uploaded to your GitHub repo and client ID is set!'); window.CoSApp.closeModal();">
+          <i class="fa-brands fa-microsoft"></i> Complete Microsoft Login
+        </button>
+      </div>
+    `;
+
+    modal.classList.add('active');
   }
 
   // Quick Action Helpers
