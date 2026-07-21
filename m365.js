@@ -125,3 +125,4 @@ authority: "https://login.microsoftonline.com/common",
 }
 
 export const m365Service = new M365Service();
+}
