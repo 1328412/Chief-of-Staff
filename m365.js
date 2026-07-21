@@ -7,8 +7,9 @@ export class M365Service {
     this.msalConfig = {
       auth: {
         clientId: "fafd3149-1381-4d6a-a8b7-6f864f719de4",
-authority: "https://login.microsoftonline.com/common",
-    redirectUri: "https://1328412.github.io/Chief-of-Staff/"      },
+        authority: "https://login.microsoftonline.com/common",
+        redirectUri: "https://1328412.github.io/Chief-of-Staff/"
+      },
       cache: {
         cacheLocation: "sessionStorage",
         storeAuthStateInCookie: false
@@ -29,10 +30,27 @@ authority: "https://login.microsoftonline.com/common",
     this.isLiveMode = false;
   }
 
-  init() {
-    if (window.msal) {
-      this.msalInstance = new window.msal.PublicClientApplication(this.msalConfig);
+  async init() {
+    if (!window.msal) return null;
+
+    this.msalInstance = new window.msal.PublicClientApplication(this.msalConfig);
+
+    try {
+      await this.msalInstance.handleRedirectPromise();
+    } catch (error) {
+      console.warn("MSAL redirect handling warning:", error);
     }
+
+    const activeAccount = this.msalInstance.getActiveAccount();
+    const accounts = this.msalInstance.getAllAccounts();
+    this.account = activeAccount || accounts[0] || null;
+
+    if (this.account) {
+      this.msalInstance.setActiveAccount(this.account);
+      this.isLiveMode = true;
+    }
+
+    return this.account;
   }
 
   async login() {
@@ -56,6 +74,7 @@ authority: "https://login.microsoftonline.com/common",
       });
 
       this.account = loginResponse.account;
+      this.msalInstance.setActiveAccount(this.account);
       this.isLiveMode = true;
       console.log("Logged in to Microsoft 365 as:", this.account.username);
 
@@ -104,7 +123,15 @@ authority: "https://login.microsoftonline.com/common",
     });
 
     if (!response.ok) {
-      throw new Error(`Graph API error: ${response.statusText}`);
+      let detail = response.statusText;
+      try {
+        const payload = await response.json();
+        detail = payload?.error?.message || payload?.error?.code || detail;
+      } catch (_) {
+        // Keep default status text when the error body is unavailable.
+      }
+
+      throw new Error(`Graph API ${response.status}: ${detail}`);
     }
 
     return await response.json();
@@ -125,4 +152,3 @@ authority: "https://login.microsoftonline.com/common",
 }
 
 export const m365Service = new M365Service();
-}

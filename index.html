@@ -89,9 +89,13 @@
         </div>
 
         <div class="header-actions">
-<button id="connect-button" class="btn btn-primary">Connect Microsoft 365</button>
-          <i class="fa-brands fa-microsoft"></i> Connect Microsoft 365
-         </button>
+          <button id="connect-button" class="btn btn-primary">
+            <i class="fa-brands fa-microsoft"></i> Connect Microsoft 365
+          </button>
+
+          <button id="btn-open-m365-diagnostics" class="btn btn-secondary">
+            <i class="fa-solid fa-stethoscope"></i> M365 Diagnostics
+          </button>
 
           <div class="cos-status-pill">
             <span class="status-dot"></span>
@@ -124,6 +128,77 @@
           <span class="preset-chip" data-prompt="Triage high priority emails and draft executive responses for CEO sign-off">
             <i class="fa-solid fa-envelope-open-text"></i> Triage Urgent Inbox
           </span>
+        </div>
+
+        <div id="m365-diagnostics-panel" class="m365-diagnostics-panel" style="display: none;">
+          <div class="m365-diag-header">
+            <div class="m365-diag-title">
+              <i class="fa-solid fa-shield-heart"></i>
+              <span>Microsoft 365 Diagnostics</span>
+            </div>
+            <div class="m365-diag-actions">
+              <button id="btn-refresh-m365-diagnostics" class="btn btn-secondary btn-small">
+                <i class="fa-solid fa-arrows-rotate"></i> Refresh
+              </button>
+              <button id="btn-run-m365-diagnostics" class="btn btn-cyan btn-small">
+                <i class="fa-solid fa-play"></i> Run Graph Test
+              </button>
+              <button id="btn-run-m365-deep-diagnostics" class="btn btn-secondary btn-small">
+                <i class="fa-solid fa-vial"></i> Verify My Data Access
+              </button>
+              <button id="btn-copy-m365-diagnostics" class="btn btn-secondary btn-small">
+                <i class="fa-regular fa-copy"></i> Copy Report
+              </button>
+            </div>
+          </div>
+
+          <div class="m365-diag-grid">
+            <div class="m365-diag-item">
+              <div class="m365-diag-label">MSAL Library</div>
+              <div id="diag-msal-library" class="m365-diag-value">Checking...</div>
+            </div>
+            <div class="m365-diag-item">
+              <div class="m365-diag-label">MSAL Client</div>
+              <div id="diag-msal-client" class="m365-diag-value">Checking...</div>
+            </div>
+            <div class="m365-diag-item">
+              <div class="m365-diag-label">Signed-In Account</div>
+              <div id="diag-account" class="m365-diag-value">Checking...</div>
+            </div>
+            <div class="m365-diag-item">
+              <div class="m365-diag-label">Live Mode</div>
+              <div id="diag-live-mode" class="m365-diag-value">Checking...</div>
+            </div>
+            <div class="m365-diag-item wide">
+              <div class="m365-diag-label">Configured Scopes</div>
+              <div id="diag-scopes" class="m365-diag-value mono">Checking...</div>
+            </div>
+            <div class="m365-diag-item wide">
+              <div class="m365-diag-label">Last Check</div>
+              <div id="diag-last-check" class="m365-diag-value mono">No checks run yet.</div>
+            </div>
+            <div class="m365-diag-item wide">
+              <div class="m365-diag-label">My Data Access Verification</div>
+              <div class="m365-deep-grid">
+                <div class="m365-deep-row">
+                  <span>Profile (/me)</span>
+                  <span id="diag-deep-profile" class="m365-diag-value">Not run</span>
+                </div>
+                <div class="m365-deep-row">
+                  <span>Mailbox (/me/messages)</span>
+                  <span id="diag-deep-mail" class="m365-diag-value">Not run</span>
+                </div>
+                <div class="m365-deep-row">
+                  <span>OneDrive (/me/drive/root/children)</span>
+                  <span id="diag-deep-files" class="m365-diag-value">Not run</span>
+                </div>
+              </div>
+            </div>
+            <div class="m365-diag-item wide">
+              <div class="m365-diag-label">Diagnostics Report Preview</div>
+              <div id="diag-report-preview" class="m365-diag-value mono">Report not generated yet.</div>
+            </div>
+          </div>
         </div>
       </section>
 
